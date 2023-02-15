@@ -60,6 +60,7 @@ inquirer.prompt(choices)
 
 const viewAll = async function() {
     console.log("Here are all of the current employees:" )
+
     const employees = `SELECT * FROM employee`;
     try {
         const res = await db.query(employees);
@@ -72,6 +73,7 @@ const viewAll = async function() {
 
 const viewAllRoles = async function() {
     console.log("Here are all of the available roles:" )
+
     const roles = `SELECT * FROM roles`;
     try {
         const res = await db.query(roles);
@@ -140,3 +142,48 @@ const roleOptions = function(role) {
         });
 };
 
+const updateRole = function() {
+  let query = `SELECT employee.employee_id, employee.first_name, employee.last_name FROM employee`;
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    const employee = res.map(({ employee_id, first_name, last_name }) => 
+    ({ value: employee_id, name: `${first_name} ${last_name}` }));
+    console.table(res);
+    updateEmpRole(employee);
+  });
+};
+
+function updateEmpRole(employee) {
+    let query = `SELECT roles.id, roles.title, roles.salary FROM roles`;
+    db.query(query, (err, res) => {
+      if (err) throw err;
+      let roleChoices = res.map(({ id, title, salary }) => ({ value: id, title, salary }));
+      console.table(res);
+      getUpdatedRole(employee, roleChoices);
+    });
+  };
+
+const getUpdatedRole = function(employee, roleChoices) {
+    inquirer
+        .prompt([
+        {
+            type: "list",
+            name: "employee",
+            message: `Employee who's role will be Updated: `,
+            choices: employee
+        },
+        {
+            type: "list",
+            name: "role",
+            message: "Select New Role: ",
+            choices: roleChoices
+        },
+
+        ]).then((res)=>{
+            let updatedEmployee = `UPDATE employee SET role_id = ? WHERE employee_id = ?`
+            db.query(updatedEmployee,[ res.roles, res.employee],(err, res)=>{
+                if(err)throw err;
+                database();
+            });
+        });
+};
