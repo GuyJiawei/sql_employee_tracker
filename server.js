@@ -1,6 +1,8 @@
 const mysql = require("mysql2");
 const inquirer = require('inquirer');
 const express = require('express');
+require('dotenv').config();
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -12,7 +14,7 @@ const db = mysql.createConnection (
     {
         host: "localhost",
         user: "root",
-        password: "ILoveTummyGirlMySQL2282!!",
+        password: process.env.DB_PASSWORD,
         database: "employees_db"
     },
     console.log("**RUNNING EMPLOYEE TRACKER**")
@@ -69,6 +71,8 @@ const database = function() {
                     break;
                 case "Finished!":
                     console.log("Thanks for using Employee Manager!")
+                    process.exit();
+                default:
                     break;
             }
         })
