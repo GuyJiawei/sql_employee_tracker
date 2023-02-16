@@ -74,7 +74,7 @@ const viewAll = async function() {
 const viewAllRoles = async function() {
     console.log("Here are all of the available roles:" )
 
-    const roles = `SELECT * FROM roles`;
+    const roles = `SELECT * FROM role`;
     try {
         const res = await db.query(roles);
         console.table(res);
