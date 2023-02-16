@@ -107,7 +107,7 @@ const addEmployee = function() {
       console.table(res);
       roleOptions(role);
     });
-  };
+};
   
 const roleOptions = function(role) {
     inquirer
@@ -187,3 +187,48 @@ const getUpdatedRole = function(employee, roleChoices) {
             });
         });
 };
+
+const addRole = function() {
+    let department = `SELECT department.id, department.title FROM department`;
+    
+    db.query(department, (err, res) => {
+      if (err) throw err;
+      const department = res.map(({ id, title }) => ({ value: id, title }));
+      
+      console.table(res);
+      newRoleOptions(department);
+    });
+};
+
+const newRoleOptions = function(department) {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "roleName",
+                message: "What is the role's title?"
+            },
+            {
+                type: "input",
+                name: "roleSalary",
+                message: "What is the role's salary?"
+            },
+            {
+                type: "list",
+                name: "departmentId",
+                message: "Which department does this role belong to?",
+                choices: department
+            }
+        ]).then((newRoleOptions)=>{
+            let role = `INSERT INTO roles SET?`
+            db.query(role,{
+                title: newRoleOptions.roleName,
+                salary: newRoleOptions.roleSalary,
+                department: newRoleOptions.departmentId
+            },(err) => {
+                if(err) throw err;
+                database();
+            });
+        });
+};
+
