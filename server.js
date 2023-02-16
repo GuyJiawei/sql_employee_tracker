@@ -8,19 +8,19 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const connection = mysql.createConnection (
+const db = mysql.createConnection (
     {
         host: "localhost",
         user: "root",
-        password: process.env.DB_PASSWORD,
+        password: "ILoveTummyGirlMySQL2282!!",
         database: "employees_db"
     },
     console.log("**RUNNING EMPLOYEE TRACKER**")
 );
 
-connection.connect(function (err) {
+db.connect(function (err) {
     if (err) console.log(err);
-    options();
+    database();
 });
 
 const UserOptions = [
@@ -33,7 +33,7 @@ const UserOptions = [
                 "Add Employee",
                 "Update Employee Role",
                 "View All Roles",
-                "Add Roles",
+                "Add Role",
                 "View All Departments",
                 "Add Department",
                 "Finished!",
@@ -67,54 +67,48 @@ const database = function() {
                 case "Add Department":
                     addDepartment();
                     break;
-                case "Finish":
+                case "Finished!":
                     console.log("Thanks for using Employee Manager!")
                     break;
             }
         })
 };
 
-const viewAll = async function() {
+const viewAll = function() {
     console.log("Here are all of the current employees:" )
 
     const employees = `SELECT * FROM employee`;
-    try {
-        const res = await db.query(employees);
+    db.query(employees, function (err, res){
+        if(err) throw err;
         console.table(res);
         database();
-    } catch (err) {
-        console.error(err);
-    }
+    });
 };
 
-const viewAllRoles = async function() {
-    console.log("Here are all of the available roles:" )
+const viewAllRoles = function() {
+    console.log("Here are all of the current roles:" )
 
     const roles = `SELECT * FROM role`;
-    try {
-        const res = await db.query(roles);
+    db.query(roles, function (err, res){
+        if(err) throw err;
         console.table(res);
         database();
-    } catch (err) {
-        console.error(err);
-    }
+    });
 };
 
-const viewAllDept = async function() {
+const viewAllDept = function() {
     console.log("Here are all of the current departments:" )
-    
-    const department = `SELECT * FROM department`;
-    try {
-        const res = await db.query(department);
+
+    const departments = `SELECT * FROM department`;
+    db.query(departments, function (err, res){
+        if(err) throw err;
         console.table(res);
         database();
-    } catch (err) {
-        console.error(err);
-    }
+    });
 };
 
 const addEmployee = function() {
-    let employee = `SELECT roles.id, roles.title, roles.salary FROM roles`;
+    let employee = `SELECT role.id, role.title, role.salary FROM role`;
     
     db.query(employee, (err, res) => {
       if (err) throw err;
@@ -141,7 +135,7 @@ const roleOptions = function(role) {
             {
                 type: "list",
                 name: "roleId",
-                message: "What is the employee's role?",
+                message: "What is the employee's role ID?",
                 choices: role
             }
         ]).then((newEmployee)=>{
@@ -159,8 +153,9 @@ const roleOptions = function(role) {
 };
 
 const updateRole = function() {
-  let query = `SELECT employee.employee_id, employee.first_name, employee.last_name FROM employee`;
-  db.query(query, (err, res) => {
+  let updateRole = `SELECT employee.employee_id, employee.first_name, employee.last_name FROM employee`
+
+  db.query(updateRole, (err, res) => {
     if (err) throw err;
     const employee = res.map(({ employee_id, first_name, last_name }) => 
     ({ value: employee_id, name: `${first_name} ${last_name}` }));
@@ -170,10 +165,14 @@ const updateRole = function() {
 };
 
 function updateEmpRole(employee) {
-    let query = `SELECT roles.id, roles.title, roles.salary FROM roles`;
-    db.query(query, (err, res) => {
+    let role = `SELECT role.id, role.title, role.salary FROM role`;
+    db.query(role, (err, res) => {
       if (err) throw err;
-      let roleChoices = res.map(({ id, title, salary }) => ({ value: id, title, salary }));
+      let roleChoices = res.map(({ id, title, salary }) => ({ 
+        value: id, 
+        title: `${title}`,
+        salary: `${salary}`
+        }));
       console.table(res);
       getUpdatedRole(employee, roleChoices);
     });
@@ -197,7 +196,7 @@ const getUpdatedRole = function(employee, roleChoices) {
 
         ]).then((res)=>{
             let updatedEmployee = `UPDATE employee SET role_id = ? WHERE employee_id = ?`
-            db.query(updatedEmployee,[ res.roles, res.employee],(err, res)=>{
+            db.query(updatedEmployee,[ res.role, res.employee],(err, res)=>{
                 if(err)throw err;
                 database();
             });
@@ -205,11 +204,14 @@ const getUpdatedRole = function(employee, roleChoices) {
 };
 
 const addRole = function() {
-    let department = `SELECT department.id, department.title FROM department`;
+    let department = `SELECT department.id, department.name FROM department`;
     
     db.query(department, (err, res) => {
       if (err) throw err;
-      const department = res.map(({ id, title }) => ({ value: id, title }));
+      const department = res.map(({ id, name }) => ({
+        value: id,
+        name: `${name}`
+        }));
       
       console.table(res);
       newRoleOptions(department);
@@ -236,11 +238,11 @@ const newRoleOptions = function(department) {
                 choices: department
             }
         ]).then((newRoleOptions)=>{
-            let role = `INSERT INTO roles SET?`
+            let role = `INSERT INTO role SET ?`
             db.query(role,{
                 title: newRoleOptions.roleName,
                 salary: newRoleOptions.roleSalary,
-                department: newRoleOptions.departmentId
+                department_id: newRoleOptions.departmentId
             },(err) => {
                 if(err) throw err;
                 database();
@@ -259,7 +261,7 @@ const addDepartment = function(department) {
         ]).then((addDepartment)=>{
             let department = `INSERT INTO department SET?`
             db.query(department,{
-                title: addDepartment.departmentName,
+                name: addDepartment.departmentName,
             },(err)=>{
                 if(err) throw err;
                 database()
