@@ -25,7 +25,7 @@ db.connect(function (err) {
     database();
 });
 
-const UserOptions = [
+const userOptions = [
         {
             type: "list",
             name: "options",
@@ -45,7 +45,7 @@ const UserOptions = [
 
 const database = function() {
     inquirer
-        .prompt(UserOptions)
+        .prompt(userOptions)
         .then(function({options}){
             switch (options) {
                 case "View All Employees":
