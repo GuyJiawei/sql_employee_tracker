@@ -23,9 +23,8 @@ connection.connect(function (err) {
     options();
 });
 
-function options() {
-    inquirer
-        .prompt({
+const UserOptions = [
+        {
             type: "list",
             name: "options",
             message: "What would you like to do?",
@@ -38,24 +37,41 @@ function options() {
                 "View All Departments",
                 "Add Department",
                 "Finished!",
-            ]
-        })
-};
+                ]
+        }
+];
 
-const optionFunctions = {
-    "View All Employees": viewAll,
-    "Add Employee": addEmployee,
-    "Update Employee Role": updateRole,
-    "View All Roles": viewAllRoles,
-    "View All Departments": viewAllDept,
-    "Add Role": addRole,
-    "Add Department": addDepartment,
-    "Quit": () => console.log("Thanks for using Employee Manager!")
-  };
-  
 const database = function() {
-inquirer.prompt(choices)
-    .then(({ options }) => optionFunctions[options]());
+    inquirer
+        .prompt(UserOptions)
+        .then(function({options}){
+            switch (options) {
+                case "View All Employees":
+                    viewAll();
+                    break;
+                case "Add Employee":
+                    addEmployee();
+                    break;
+                case "Update Employee Role":
+                    updateRole();
+                    break;
+                case "View All Roles":
+                    viewAllRoles();
+                    break;
+                case "View All Departments":
+                    viewAllDept();
+                    break;
+                case "Add Role":
+                    addRole();
+                    break;
+                case "Add Department":
+                    addDepartment();
+                    break;
+                case "Finish":
+                    console.log("Thanks for using Employee Manager!")
+                    break;
+            }
+        })
 };
 
 const viewAll = async function() {
