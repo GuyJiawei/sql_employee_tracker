@@ -232,3 +232,21 @@ const newRoleOptions = function(department) {
         });
 };
 
+const addDepartment = function(department) {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                name: "departmentName",
+                message: "What is the name of the new department?"
+            }
+        ]).then((addDepartment)=>{
+            let department = `INSERT INTO department SET?`
+            db.query(department,{
+                title: addDepartment.departmentName,
+            },(err)=>{
+                if(err) throw err;
+                database()
+            });
+        });
+};
