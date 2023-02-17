@@ -164,6 +164,11 @@ const roleOptions = function(role) {
                 name: "roleId",
                 message: "What is the employee's role ID?",
                 choices: role
+            },
+            {
+                type: "input",
+                name: "managerId",
+                message: "What is the employee's Manager ID?"
             }
         ]).then((newEmployee)=>{
             // Insert the new employee into the database with the given information
@@ -171,7 +176,9 @@ const roleOptions = function(role) {
             db.query(employee,{
                 first_name: newEmployee.firstName,
                 last_name: newEmployee.lastName,
-                role_id: newEmployee.roleId
+                role_id: newEmployee.roleId,
+                manager_id: newEmployee.managerId
+
             },(err)=>{
                 if(err) throw err;
                 console.log("New employee added!")
