@@ -3,7 +3,7 @@
   ![License Badge](https://img.shields.io/badge/license-MIT-green.svg)
 
   ## Description
-  Employee Tracker is a CLI applicaiton for building and maintaining companies employee data base. Built on MySQL and leveraging modularity in the structure of Employee Tracker, it can scale appropriatley with a companies growth without reconfiguring the core structure of the internal employee data base. This application can act as a foundation to continue to build upon. Employee allows managers or someone within the company to view all employees, roles, as well as departments. It also allows for adding employees, roles, departments and updating employees all from your CLI.
+  Employee Tracker is a command-line interface (CLI) application that enables the creation and management of an employee database for a company. It utilizes MySQL and is designed with modularity in mind, allowing it to scale effectively with the company's growth without requiring significant reconfiguration of the underlying database structure. The application serves as a foundation for continued development, providing features for viewing all employees, roles, and departments, as well as adding and updating employee data all through the command line. This makes it easy for managers and other personnel to maintain and keep track of the company's workforce.
 
   ## Table of Contents
 
