@@ -56,9 +56,6 @@
   - Email: guy.jiawei.anderson@gmail.com
 
   ## Demo
+  Full video at: https://drive.google.com/drive/folders/1wo8WE9C5EeIWv-RiO2m5RmX95_pGrTps?usp=sharing
 
-  ![GIF](./Assets/Demo.gif)
-
-  ## Screenshot
-
-  ![Screenshot](./Assets/html_pic.png)
+  ![GIF](./Assets/employee_tracker_demo.webm)
